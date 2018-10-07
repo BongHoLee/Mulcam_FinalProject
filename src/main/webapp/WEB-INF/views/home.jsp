@@ -1,15 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 
 <script type="text/javascript"
 	src="https://www.gstatic.com/charts/loader.js"></script>
 
-
 <div class="section">
-
 <div class="container">
 		
 		
@@ -177,7 +175,6 @@ function drawChartClick(){
 			vAxis : {
 				title : 'Keyword'
 			}
->>>>>>> branch 'dev' of https://github.com/mrclap/ganadanawa.git
 			
 			<c:if test="${(loop.index)==0}">
 				<!-- section title -->
@@ -233,7 +230,6 @@ function drawChartClick(){
 				
 				<!-- /Product Single -->
 
-<<<<<<< HEAD
 				<c:choose>
 					<c:when test="${(loop.index+1)%4 == 0 }">
 					
@@ -253,16 +249,13 @@ function drawChartClick(){
 
 				</div>
 				</div>
-=======
 		chart.draw(data, options);
 	};
 };
 </script>
->>>>>>> branch 'dev' of https://github.com/mrclap/ganadanawa.git
 
 
-<<<<<<< HEAD
-=======
+
 var fn_BasketStatistics = function( callBackFunc ){
 	
     $.ajax({ //jquery ajax
@@ -315,11 +308,8 @@ function drawChartBasket(){
 			vAxis : {
 				title : 'Hot Goods'
 			}
->>>>>>> branch 'dev' of https://github.com/mrclap/ganadanawa.git
 			
-<<<<<<< HEAD
 			
-=======
 		};
 
 		var chart = new google.visualization.BarChart(document
@@ -338,4 +328,3 @@ function drawChartBasket(){
 
 
 
->>>>>>> branch 'dev' of https://github.com/mrclap/ganadanawa.git

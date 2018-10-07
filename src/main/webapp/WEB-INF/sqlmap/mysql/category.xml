@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="category">
+	<select id="Alist" resultType="Map" parameterType="Map" timeout="10">
+	SELECT *
+	FROM WFS_CATEGORY_A
+	</select>
+
+
+	<select id="Blist" resultType="Map" parameterType="Map">
+	 SELECT b.CATEGORY_B_ID, b.CATEGORY_B_NAME, c.CATEGORY_C_ID, c.CATEGORY_C_NAME
+	FROM WFS_CATEGORY_B b, WFS_CATEGORY_C c
+	WHERE b.CATEGORY_A_ID=#{CATEGORY_A_ID} and b.CATEGORY_B_ID=c.CATEGORY_B_ID
+	</select>
+
+	<insert id="merge" parameterType="Map">
+		INSERT INTO WFS_EVENT (
+			EVENT_SEQ 
+			, TITLE
+			, IMG
+			, KEYWORD
+			, STARTINGDAY 
+			, FINISHINGDAY
+			)
+		values(
+			#{EVENT_SEQ} 
+			, #{TITLE} 
+			, #{IMG}
+			, #{KEYWORD}
+			, #{STARTINGDAY}
+			, #{FINISHINGDAY}
+			)
+		ON DUPLICATE KEY UPDATE
+			EVENT_SEQ = #{EVENT_SEQ}
+		<!-- MERGE INTO WFS_EVENT as WFS1
+		USING (SELECT #{EVENT_SEQ} AS EVENT_SEQ FROM DUAL) AS WFS2
+		ON (WFS1.EVENT_SEQ = WFS2.EVENT_SEQ)
+		WHEN MATCHED THEN
+		UPDATE SET
+		EVENT_SEQ = #{EVENT_SEQ} 
+		, TITEL = #{TITEL} 이벤트 제목
+		, IMG = #{IMG} 이미지파일 이름
+		, KEYWORD = #{KEYWORD} 검색 키워드
+		, STARTINGDAY = #{STARTINGDAY} 이벤트 시작날짜
+		, FINISHINGDAY = #{FINISHINGDAY} 이벤트 종료일
+		
+		WHEN NOT MATCHED THEN
+		INSERT (
+		EVENT_SEQ 
+		, TITEL
+		, IMG
+		, KEYWORD
+		, STARTINGDAY 
+		, FINISHINGDAY
+		)
+		values(
+		#{EVENT_SEQ} 
+		, #{TITEL} 
+		, #{IMG}
+		, #{KEYWORD}
+		, #{STARTINGDAY}
+		, #{FINISHINGDAY}
+		) -->
+	</insert>
+	
+
+
+
+	<delete id="delete" parameterType="Map">
+	 delete from CIP_ORGANIZATION
+	 <![CDATA[
+	 where ORGANIZATION_SEQ = #{ORGANIZATION_SEQ}
+	 ]]>
+	</delete>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="myBasket">
+	<select id="list" resultType="Map" parameterType="Map" timeout="10">
+	SELECT BOOKMARK_SEQ,
+		MEMBER_SEQ,
+		IMG,
+		GOODS_INFO,
+		PRICE,
+		STORE,
+		URI
+	FROM WFS_BOOKMARK
+	WHERE 1=1 
+		AND STATUS = "CONSIDERING"
+		<if test="MEMBER_SEQ != null">
+			AND MEMBER_SEQ = #{MEMBER_SEQ}
+	    </if>
+	</select>
+
+	<select id="listRank" resultType="Map" parameterType="Map" timeout="10">
+	SELECT GOODS_INFO,
+		count(GOODS_INFO) as MOST_ADD,
+		BOOKMARK_SEQ,
+		MEMBER_SEQ,
+		IMG,
+		PRICE,
+		STORE,
+		URI
+	FROM WFS_BOOKMARK
+	WHERE 1=1
+		AND STATUS = "CONSIDERING"
+	GROUP BY GOODS_INFO
+	ORDER BY MOST_ADD DESC
+	LIMIT 4
+	</select>
+
+	<select id="read" resultType="Map" parameterType="Map">
+	 SELECT BOOKMARK_SEQ,
+		MEMBER_SEQ,
+		IMG,
+		GOODS_INFO,
+		PRICE,
+		STORE,
+		URI
+	FROM WFS_BOOKMARK
+	WHERE 1=1
+		AND BOOKMARK_SEQ = #{BOOKMARK_SEQ}
+	</select>
+	
+	<select id="listCount" resultType="int" parameterType="Map" timeout="10">
+	SELECT COUNT(BOOKMARK_SEQ)
+	FROM WFS_BOOKMARK
+	WHERE 1=1
+		AND MEMBER_SEQ = #{MEMBER_SEQ}
+		AND STATUS = "CONSIDERING"
+	</select>
+
+	<insert id="merge" parameterType="Map">
+		INSERT INTO WFS_BOOKMARK (
+			BOOKMARK_SEQ,
+			MEMBER_SEQ,
+			IMG,
+			GOODS_INFO,
+			PRICE,
+			STORE,
+			URI,
+			STATUS
+			)
+		values(
+			#{BOOKMARK_SEQ} 
+			, #{MEMBER_SEQ} 
+			, #{PRODUCT_IMG}
+			, #{PRODUCT_NAME}
+			, #{PRODUCT_PRICE}
+			, #{SITE_NAME}
+			, #{URI}
+			, #{STATUS}
+			)
+		ON DUPLICATE KEY UPDATE
+			BOOKMARK_SEQ = #{BOOKMARK_SEQ}
+	</insert>
+	
+	<update id="update" parameterType="Map">
+	UPDATE WFS_BOOKMARK
+	SET STATUS = #{STATUS}
+	WHERE 1=1
+		AND BOOKMARK_SEQ = #{BOOKMARK_SEQ}
+	</update>
+	
+	<delete id="delete" parameterType="Map">
+	 delete from WFS_BOOKMARK
+	 <![CDATA[
+	 where BOOKMARK_SEQ = #{BOOKMARK_SEQ}
+	 ]]>
+	</delete>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="event">
+	<select id="list" resultType="Map" parameterType="Map" timeout="10">
+	SELECT EVENT_SEQ,
+		MAINORSUB,
+		TITLE,
+		IMG,
+		KEYWORD,
+		STARTINGDAY,
+		FINISHINGDAY,
+		WRITEDATE
+	FROM WFS_EVENT
+	ORDER BY WRITEDATE asc
+	</select>
+
+
+	<select id="read" resultType="Map" parameterType="Map">
+	 SELECT EVENT_SEQ,
+	 	MAINORSUB,
+		TITLE,
+		IMG,
+		KEYWORD,
+		STARTINGDAY,
+		FINISHINGDAY,
+		WRITEDATE
+	FROM WFS_EVENT
+	WHERE EVENT_SEQ = #{EVENT_SEQ}
+	</select>
+
+	<insert id="merge" parameterType="Map">
+		INSERT INTO WFS_EVENT (
+			EVENT_SEQ 
+			, MAINORSUB
+			, TITLE
+			, IMG
+			, KEYWORD
+			, STARTINGDAY 
+			, FINISHINGDAY
+			, WRITEDATE
+			)
+		values(
+			#{EVENT_SEQ} 
+			, #{MAINORSUB} 
+			, #{TITLE} 
+			, #{IMG}
+			, #{KEYWORD}
+			, #{STARTINGDAY}
+			, #{FINISHINGDAY}
+			, now()
+			)
+		ON DUPLICATE KEY UPDATE
+			MAINORSUB = #{MAINORSUB}
+			, TITLE = #{TITLE}
+			, IMG = #{IMG}
+			, KEYWORD = #{KEYWORD}
+			, STARTINGDAY = #{STARTINGDAY}
+			, FINISHINGDAY = #{FINISHINGDAY}
+			, WRITEDATE = now()	
+		</insert>
+
+	<delete id="delete" parameterType="Map">
+	 delete from WFS_EVENT
+	 where EVENT_SEQ = #{EVENT_SEQ}
+	</delete>
+
+</mapper>

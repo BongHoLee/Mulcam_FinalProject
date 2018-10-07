@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="member">
+	<select id="read" resultType="Map" parameterType="Map" timeout="10">
+	SELECT MEMBER_SEQ, AUTHORITY_ID, EMAIL, NAME, PHONE, PASSWORD, REGISTERDATE
+	FROM WFS_MEMBER WHERE EMAIL=#{EMAIL}
+	</select>
+
+
+	<select id="list" resultType="Map" parameterType="Map">
+	SELECT MEMBER_SEQ, WFS_MEMBER.AUTHORITY_ID, AUTHORITY, EMAIL, NAME, PHONE, PASSWORD, REGISTERDATE
+	FROM WFS_MEMBER, WFS_AUTHORITY
+	WHERE WFS_MEMBER.AUTHORITY_ID = WFS_AUTHORITY.AUTHORITY_ID
+	ORDER BY AUTHORITY
+	</select>
+
+	<insert id="insert" parameterType="Map">
+		INSERT INTO WFS_MEMBER(MEMBER_SEQ, AUTHORITY_ID, EMAIL, NAME, PHONE, PASSWORD, REGISTERDATE) 
+		VALUES (#{MEMBER_SEQ}, #{AUTHORITY_ID}, #{EMAIL}, #{NAME}, #{PHONE}, #{PASSWORD}, NOW())
+		
+	</insert>
+	
+
+
+
+	<delete id="delete" parameterType="Map">
+	 delete from WFS_MEMBER WHERE EMAIL=#{EMAIL}
+
+	</delete>
+
+</mapper>

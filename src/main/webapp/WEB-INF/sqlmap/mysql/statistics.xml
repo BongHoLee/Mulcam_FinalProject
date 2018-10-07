@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="statistics">
+	<select id="clicklist" resultType="Map" parameterType="Map" timeout="10">
+	SELECT KEYWORD,  count(if(DATE(SEARCHDATE) = DATE(NOW()), SEARCHDATE, null)) as TODAY_CLICK, CURDATE() as CURDATE
+	FROM WFS_STATISTICS
+	GROUP BY KEYWORD
+	HAVING TODAY_CLICK != '0'
+	ORDER BY TODAY_CLICK DESC
+	</select>
+	
+	<select id="basketlist" resultType="Map" parameterType="Map" timeout="10">
+	SELECT GOODS_INFO,count(GOODS_INFO) as MOST_ADD,
+		BOOKMARK_SEQ,
+		MEMBER_SEQ,
+		IMG,
+		PRICE,
+		STORE,
+		URI
+	FROM WFS_BOOKMARK
+	WHERE 1=1
+		AND STATUS = "CONSIDERING"
+	GROUP BY GOODS_INFO
+	ORDER BY MOST_ADD DESC
+	LIMIT 5
+	</select>
+
+
+	<select id="read" resultType="Map" parameterType="Map">
+	 SELECT EVENT_SEQ,
+	 	MAINORSUB,
+		TITLE,
+		IMG,
+		KEYWORD,
+		STARTINGDAY,
+		FINISHINGDAY,
+		WRITEDATE
+	FROM WFS_EVENT
+	WHERE EVENT_SEQ = #{EVENT_SEQ}
+	</select>
+
+	<insert id="merge" parameterType="Map">
+		INSERT INTO WFS_STATISTICS (
+			STATISTICS_SEQ 
+			, KEYWORD
+			, SEARCHDATE
+			)
+		values(
+			#{STATISTICS_SEQ} 
+			, #{KEYWORD} 
+			, now()
+			)
+		ON DUPLICATE KEY UPDATE
+			STATISTICS_SEQ = #{STATISTICS_SEQ}
+		<!-- MERGE INTO WFS_EVENT as WFS1
+		USING (SELECT #{EVENT_SEQ} AS EVENT_SEQ FROM DUAL) AS WFS2
+		ON (WFS1.EVENT_SEQ = WFS2.EVENT_SEQ)
+		WHEN MATCHED THEN
+		UPDATE SET
+		EVENT_SEQ = #{EVENT_SEQ} 
+		, TITEL = #{TITEL} 이벤트 제목
+		, IMG = #{IMG} 이미지파일 이름
+		, KEYWORD = #{KEYWORD} 검색 키워드
+		, STARTINGDAY = #{STARTINGDAY} 이벤트 시작날짜
+		, FINISHINGDAY = #{FINISHINGDAY} 이벤트 종료일
+		
+		WHEN NOT MATCHED THEN
+		INSERT (
+		EVENT_SEQ 
+		, TITEL
+		, IMG
+		, KEYWORD
+		, STARTINGDAY 
+		, FINISHINGDAY
+		)
+		values(
+		#{EVENT_SEQ} 
+		, #{TITEL} 
+		, #{IMG}
+		, #{KEYWORD}
+		, #{STARTINGDAY}
+		, #{FINISHINGDAY}
+		) -->
+	</insert>
+	
+
+
+
+	<delete id="delete" parameterType="Map">
+	 delete from CIP_ORGANIZATION
+	 <![CDATA[
+	 where ORGANIZATION_SEQ = #{ORGANIZATION_SEQ}
+	 ]]>
+	</delete>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="home">
+	<select id="list" resultType="Map" parameterType="Map" timeout="10">
+<!-- 		SELECT IMG, max(WRITEDATE)
+		FROM WFS_EVENT
+		WHERE MAINORSUB IN ('MAIN','SUB')
+		group by MAINORSUB
+		order by MAINORSUB -->
+		
+		SELECT E3.IMG IMG, E3.WRITEDATE WRITEDATE, E3.TITLE TITLE 
+		FROM (SELECT MAX(E1.WRITEDATE) MAX_WRITEDATE, E1.MAINORSUB 
+				FROM WFS_EVENT AS E1
+				GROUP BY E1.MAINORSUB) AS E2, WFS_EVENT AS E3
+		WHERE E2.MAINORSUB IN ('MAIN','SUB1','SUB2') AND E3.WRITEDATE = MAX_WRITEDATE AND E3.MAINORSUB = E2.MAINORSUB
+		group by E2.MAINORSUB
+		order by E2.MAINORSUB
+	</select>
+</mapper>

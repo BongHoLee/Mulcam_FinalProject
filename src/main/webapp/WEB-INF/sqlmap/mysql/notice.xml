@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="notice">
+	<select id="list" resultType="Map" parameterType="Map" timeout="10">
+	SELECT NOTICE_SEQ,
+		MEMBER_SEQ,
+		TITLE,
+		CONTENT,
+		WRITEDATE
+	FROM WFS_NOTICE
+	WHERE 1=1 
+	ORDER BY WRITEDATE DESC
+	</select>
+
+	<select id="read" resultType="Map" parameterType="Map">
+	SELECT NOTICE.NOTICE_SEQ,
+		NOTICE.MEMBER_SEQ,
+		NOTICE.TITLE,
+		NOTICE.CONTENT,
+		NOTICE.WRITEDATE,
+		MEMBER.NAME
+	FROM WFS_NOTICE NOTICE INNER JOIN WFS_MEMBER MEMBER
+		ON NOTICE.MEMBER_SEQ = MEMBER.MEMBER_SEQ
+	WHERE 1=1 
+	AND NOTICE_SEQ = #{NOTICE_SEQ}
+	</select>
+	
+	<insert id="merge" parameterType="Map">
+		INSERT INTO WFS_NOTICE (
+			NOTICE_SEQ
+			, MEMBER_SEQ
+			, TITLE
+			, CONTENT
+			, WRITEDATE
+			)
+		values(
+			#{NOTICE_SEQ} 
+			, #{MEMBER_SEQ} 
+			, #{TITLE}
+			, #{CONTENT}
+			, now()
+			)
+		ON DUPLICATE KEY UPDATE
+			NOTICE_SEQ = #{NOTICE_SEQ}
+			, MEMBER_SEQ = #{MEMBER_SEQ}
+			, TITLE = #{TITLE}
+			, CONTENT = #{CONTENT}
+			, WRITEDATE = now()
+	</insert>
+	
+	<delete id="delete" parameterType="Map">
+	 delete from WFS_NOTICE
+	 <![CDATA[
+	 where NOTICE_SEQ = #{NOTICE_SEQ}
+	 ]]>
+	</delete>
+
+</mapper>
